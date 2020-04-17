@@ -1,9 +1,8 @@
  
-getGamesList(function(arrayOfGames){
+ getGamesList().then(function(arrayOfGames){
     for (var i = 0; i < arrayOfGames.length; i++) {
         createDomElement(arrayOfGames[i]);
-        
-    }  
+    }
 });
 
 function createDomElement(gameObj){
@@ -23,8 +22,8 @@ function createDomElement(gameObj){
     
     document.getElementById(`${gameObj._id}`).addEventListener("click", function(){
         if (event.target.classList.contains('delete-btn')) {
-                deleteGame(gameELement.getAttribute("id"), function(apiResponse){
-                    console.log('apiResponse ',apiResponse);
+                deleteGame(gameELement.getAttribute("id")).then(function(apiResponse){
+                    // console.log('apiResponse ',apiResponse);
                     removeDeletedElementFromDOM(gameELement);
                 });
         } else if (event.target.classList.contains('editBtn')) {
@@ -88,7 +87,7 @@ function createUpdateForm(gameContainer) {
             }
             
             if (updatedGameTitle.value !== oldTitle || updatedGameDescription.value !== oldDescription || updatedGameImageUrl.value !== oldImageURL){
-                editGame(gameContainer.id, urlencoded, function(editGameResponse){
+                editGame(gameContainer.id, urlencoded).then(function(editGameResponse){
                     console.log('Raspuns callback PUT ', editGameResponse);                   
                 })
             }
@@ -157,7 +156,8 @@ document.querySelector(".submitBtn").addEventListener("click", function(event){
         urlencoded.append("imageUrl", gameImageUrl.value);
         urlencoded.append("description", gameDescription.value);
 
-        createGameRequest(urlencoded, createDomElement);
+        // createGameRequest(urlencoded, createDomElement);
+        createGameRequest(urlencoded).then(createDomElement);
     }
 })
 
@@ -182,6 +182,8 @@ reloadDataBase.addEventListener('click', function() {
 
     const alertBox = confirm("Do you really want to reload DataBase ?")
     if (alertBox === true) {
-        reloadData()
+        reloadData().then(function(response) {
+
+        })
     }
 })
